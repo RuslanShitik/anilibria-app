@@ -42,7 +42,7 @@ const loadMore = async (): Promise<void> => {
           />
 
           <template v-if="isLoading">
-            <TitleCardSkelton v-for="i in 3" :key="i" />
+            <TitleCardSkeleton v-for="i in 3" :key="i" />
           </template>
 
           <q-btn v-if="!isLoading" flat @click="loadMore">Еще</q-btn>
