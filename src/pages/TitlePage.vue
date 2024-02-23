@@ -1,10 +1,7 @@
 <template>
   <PageComponent>
-    <!-- <video
-      v-if="titleData"
-      :src="getVideoUrl(titleData.player.list[1].hls.sd)"
-    ></video> -->
-
+    <!-- getVideoUrl(titleData?.player.host || '', titleData?.player.list[1].hls.sd || '') -->
+    
     anime: {{ titleData }}
   </PageComponent>
 </template>
