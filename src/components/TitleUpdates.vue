@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { titleT } from 'src/types';
 import { Ref, onMounted, ref } from 'vue';
-import { useTitleAPI } from '../composables/title-api';
+import { ITitlesResponse, useTitleAPI } from '../composables/title-api';
 import { getImageUrl } from '../composables/urls';
 import TitleCard from './TitleCard.vue';
 import TitleCardSkeleton from './TitleCardSkeleton.vue';
+
 
 const titleUpdates: Ref<titleT[]> = ref([]);
 const isLoading: Ref<boolean> = ref(false);
@@ -12,7 +13,7 @@ const page: Ref<number> = ref(1);
 
 const getTitleUpdates = async (): Promise<void> => {
   isLoading.value = true;
-  const res = await useTitleAPI('title/updates', { page: page.value });
+  const res = await useTitleAPI<ITitlesResponse>('title/updates', { page: page.value });
   titleUpdates.value = [...titleUpdates.value, ...res.list];
   isLoading.value = false;
 };
