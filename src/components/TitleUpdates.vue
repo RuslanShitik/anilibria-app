@@ -29,7 +29,7 @@ const loadMore = async (): Promise<void> => {
 
 <template>
   <div class="row">
-    <div class="text-h6 col-12">Последние обновления</div>
+    <div class="text-h5 col-12">Последние обновления</div>
     <div class="col-12">
       <q-scroll-area style="width: 100%; height: 465px">
         <div class="row q-gutter-sm no-wrap">
