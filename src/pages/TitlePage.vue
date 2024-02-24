@@ -12,7 +12,7 @@
         )
       "
     />
-    <!-- anime: {{ titleData }} -->
+    anime: {{ titleData?.names.ru }}
 
     <q-btn-group push>
       <q-btn
@@ -23,7 +23,6 @@
         @click="currentEpisode = el.episode - 1"
       />
     </q-btn-group>
-    {{ episodesList }}
   </PageComponent>
 </template>
 

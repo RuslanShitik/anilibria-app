@@ -10,7 +10,7 @@
       </div>
     </q-img>
     <q-card-actions>
-      <q-btn flat>Смотреть</q-btn>
+      <q-btn @click="$router.push(`/title/${code}`)" flat>Смотреть</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -20,7 +20,8 @@
 interface ICardTitleProps {
     poster: string;
     titleName: string;
-    titleType: string; 
+    titleType: string;
+    code: string;
 }
 
 defineProps<ICardTitleProps>()
