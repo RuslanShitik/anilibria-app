@@ -16,6 +16,7 @@ export type titleT = {
   blocked: blockedT;
   player: playerT;
   torrents: torrentsT;
+  franchises: franchisesT[];
 };
 
 export type namesT = {
@@ -157,4 +158,21 @@ export type description_typeT = {
   html: string; //html – Описание тайтла в виде html (в том виде в каком оно на сайте)
   plain: string; // plain – Описание тайтла в виде текста без дополнительного форматирования
   no_view_order: string; //no_view_order – Описание тайтла в виде текста без дополнительного форматирования и порядка просмотра
+};
+
+export type releaseT = {
+  code: string;
+  id: number;
+  names: namesT;
+  original: number;
+};
+
+export type franchiseT = {
+  id: string;
+  name: string;
+};
+
+export type franchisesT = {
+  franchise: franchiseT;
+  releases: releaseT[];
 };

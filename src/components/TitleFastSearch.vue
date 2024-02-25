@@ -11,7 +11,6 @@ const $q = useQuasar();
 const search = ref<string>('');
 
 const handleSearchClick = () => {
-  console.log('suka');
   fastSearchTitle();
 };
 

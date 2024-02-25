@@ -1,56 +1,122 @@
 <template>
   <PageComponent>
-    <!-- getVideoUrl(titleData?.player.host || '', titleData?.player.list[1].hls.sd || '') -->
-    <VideoPlayer
-      v-if="episodesList.length"
-      controls
-      aspect-ratio="16:9"
-      :src="
-        getVideoUrl(
-          titleData?.player.host || '',
-          episodesList[currentEpisode].hls.sd
-        )
-      "
-    />
-    anime: {{ titleData?.names.ru }}
+    <div class="q-gutter-y-xl" v-if="titleData">
+      <div class="row">
+        <div class="col-12">
+          <q-img :src="getImageUrl(titleData.posters.original.url)" />
+        </div>
+        <div class="col-12 text-h5">
+          <div class="row">
+            <div class="col-12">
+              {{ titleData.names.ru }}
+            </div>
+            <div class="col-12 q-gutter-xs">
+              <q-badge
+                :key="index"
+                v-for="(genre, index) in titleData.genres"
+                :label="genre"
+                color="secondary"
+              />
+            </div>
+            <div class="col-12 q-gutter-xs">
+              <q-btn
+                v-if="titleData.player.list"
+                unelevated
+                color="primary"
+                label="watch"
+                href="#watch"
+              />
+              <q-btn
+                unelevated
+                color="primary"
+                label="description"
+                href="#description"
+              />
+              <q-btn
+                v-if="titleData.franchises.length"
+                unelevated
+                color="primary"
+                label="Franchise"
+                href="#franchise"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="description">
+        <div class="col-12 text-body1">
+          {{ titleData.description }}
+        </div>
+      </div>
+      <div class="row" v-if="titleData.player.list" id="watch">
+        <div class="col-12">
+          <TitleVideoPlayer :player="titleData.player" />
+        </div>
+      </div>
 
-    <q-btn-group push>
-      <q-btn
-        v-for="el in episodesList"
-        push
-        :label="el.episode"
-        :key="el.episode"
-        @click="currentEpisode = el.episode - 1"
-      />
-    </q-btn-group>
+      <div v-if="titleData.franchises.length" id="franchise" class="row">
+        <div class="col-12 text-h5">Франшизы</div>
+        <div class="col-12">
+          <div
+            :key="el.franchise.id"
+            v-for="el in titleData.franchises"
+            class="row"
+          >
+            <div class="col-12 text-h6">
+              {{ el.franchise.name }}
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <q-list bordered separator>
+                    <q-item
+                      :key="el2.id"
+                      v-for="el2 in el.releases"
+                      clickable
+                      v-ripple
+                      :to="`/title/${el2.code}`"
+                    >
+                      <q-item-section>{{ el2.names.ru }}</q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </PageComponent>
 </template>
 
 <script setup lang="ts">
 import PageComponent from 'src/components/PageComponent.vue';
 import { getTitleByCode } from 'src/composables/title-api';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { titleT } from 'src/types';
-import { getVideoUrl } from 'src/composables/urls';
-import { VideoPlayer } from '@videojs-player/vue';
 import 'video.js/dist/video-js.css';
+import TitleVideoPlayer from 'src/components/TitleVideoPlayer.vue';
+import { getImageUrl } from 'src/composables/urls';
+import { watch } from 'vue';
 
 const $q = useQuasar();
-const { params } = useRoute();
-const code = String(params.code);
+const route = useRoute();
 
 const titleData = ref<titleT | null>();
-const currentEpisode = ref(0);
 
-const episodesList = computed(
-  () => Object.values(titleData.value?.player.list || {}).map((el) => el) || []
-);
+watch(route, async () => {
+    await fetchTitleData();
+})
 
 onMounted(async () => {
-  $q.loading.show();
-  titleData.value = await getTitleByCode(code);
-  $q.loading.hide();
+  await fetchTitleData();
 });
+
+const fetchTitleData = async (): Promise<void> => {
+  $q.loading.show();
+  titleData.value = await getTitleByCode(String(route.params.code));
+  $q.loading.hide();
+};
 </script>
